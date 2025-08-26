@@ -1,45 +1,103 @@
-<script>
-// ... keep everything else the same above ...
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unblocked Games Launcher</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px;
+    }
+    .game {
+      padding: 10px 15px;
+      background: #333;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 200px;
+      text-align: center;
+    }
+    .window {
+      position: fixed;
+      top: 50px;
+      left: 50px;
+      width: 80%;
+      height: 80%;
+      background: #222;
+      border: 2px solid #555;
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+    }
+    .titlebar {
+      background: #444;
+      padding: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .titlebar button {
+      margin-left: 5px;
+      cursor: pointer;
+      border: none;
+      background: #666;
+      color: #fff;
+      padding: 2px 8px;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">🎮 Unblocked Games Launcher</h1>
+  <div class="grid" id="gameGrid"></div>
 
-// app controls
-document.getElementById('btnClose').addEventListener('click',()=>{
-  // close the tab entirely
-  window.close();
-});
+  <script>
+    // -------------------------
+    // Editable games list
+    // Add icon later by adding `icon: "URL"` to each object
+    // -------------------------
+    const games = [
+      { name: "2048", url: "https://bigdog234.github.io/HTML-Games-V2/2048/" },
+      { name: "Cookie Clicker", url: "https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/" },
+      { name: "Crossy Road", url: "https://bigdog234.github.io/HTML-Games-V2/crossyroad/" }
+    ];
 
-document.getElementById('btnMin').addEventListener('click',()=>{
-  app.style.display='none';
-});
+    const grid = document.getElementById("gameGrid");
 
-document.getElementById('btnMax').addEventListener('click',()=>{
-  // use Fullscreen API
-  if (!document.fullscreenElement) {
-    app.requestFullscreen().catch(err=>{
-      console.warn("Fullscreen request failed:", err);
+    games.forEach(game => {
+      const div = document.createElement("div");
+      div.className = "game";
+      div.textContent = game.name;
+      div.onclick = () => openWindow(game);
+      grid.appendChild(div);
     });
-  } else {
-    document.exitFullscreen();
-  }
-});
 
-// drag app by titlebar
-(function attachAppDrag(){
-  const title = document.getElementById('appTitlebar');
-  let dragging=false, sx,sy,ox,oy;
-  title.addEventListener('pointerdown',(e)=>{
-    if(document.fullscreenElement) return; // don’t drag in fullscreen
-    dragging=true; title.setPointerCapture(e.pointerId);
-    sx=e.clientX; sy=e.clientY;
-    const r=app.getBoundingClientRect();
-    ox=r.left; oy=r.top;
-  });
-  window.addEventListener('pointermove',(e)=>{
-    if(!dragging) return;
-    app.style.left = (ox + e.clientX - sx) + 'px';
-    app.style.top  = (oy + e.clientY - sy) + 'px';
-  });
-  window.addEventListener('pointerup',(e)=>{ dragging=false; try{ title.releasePointerCapture(e.pointerId) }catch(e){} });
-})();
-
-// ... keep rest unchanged ...
-</script>
+    function openWindow(game) {
+      const win = document.createElement("div");
+      win.className = "window";
+      win.innerHTML = `
+        <div class="titlebar">
+          <span>${game.name}</span>
+          <div>
+            <button onclick="this.closest('.window').style.display='none'">➖</button>
+            <button onclick="this.closest('.window').requestFullscreen()">⛶</button>
+            <button onclick="this.closest('.window').remove()">✕</button>
+          </div>
+        </div>
+        <iframe src="${game.url}"></iframe>
+      `;
+      document.body.appendChild(win);
+    }
+  </script>
+</body>
+</html>
