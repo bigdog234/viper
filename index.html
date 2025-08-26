@@ -4,65 +4,40 @@
 <meta charset="UTF-8">
 <title>Unblocked Games Launcher</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#1a1a1a;color:#fff}
+body{margin:0;font-family:Arial,sans-serif;background:#1a1a1a;color:#fff;overflow:hidden}
 h1{text-align:center;padding:10px}
 .grid{display:flex;flex-wrap:wrap;gap:10px;padding:20px}
 .game{padding:10px 15px;background:#333;border-radius:6px;cursor:pointer;width:180px;text-align:center}
-.window{position:fixed;top:50px;left:50px;width:80%;height:80%;background:#222;border:2px solid #555;display:flex;flex-direction:column;z-index:999}
+.window{position:absolute;top:50px;left:50px;width:70%;height:70%;background:#222;border:2px solid #555;display:flex;flex-direction:column;z-index:10}
 .titlebar{background:#444;padding:5px;display:flex;justify-content:space-between;align-items:center;cursor:grab}
-.titlebar button{margin-left:5px;cursor:pointer;border:none;background:#666;color:#fff;padding:2px 8px}
+.titlebar button{margin-left:5px;cursor:pointer;border:none;background:#666;color:#fff;padding:2px 8px;border-radius:4px}
 iframe{flex:1;border:none}
+.taskbar{position:fixed;bottom:0;left:0;width:100%;background:#111;padding:5px;display:flex;gap:5px}
+.taskbtn{padding:5px 10px;background:#333;border-radius:4px;cursor:pointer}
+.taskbtn.active{background:#555}
 </style>
 </head>
 <body>
 <h1>🎮 Unblocked Games Launcher</h1>
 <div class="grid" id="gameGrid"></div>
+<div class="taskbar" id="taskbar"></div>
+
 <script>
 const games=[
   {name:"2048",url:"https://bigdog234.github.io/HTML-Games-V2/2048/"},
-  {name:"2048 Multitask",url:"https://bigdog234.github.io/HTML-Games-V2/2048-multitask/"},
-  {name:"1v1.lol",url:"https://craep0.github.io/1v1-lol-online.github.io/file/#"}, // updated URL
-  {name:"1v1space",url:"https://bigdog234.github.io/HTML-Games-V2/1v1space/"},
-  {name:"8 Ball Billiards",url:"https://bigdog234.github.io/HTML-Games-V2/8ball-billards-classic/"},
-  {name:"9007199254740992",url:"https://bigdog234.github.io/HTML-Games-V2/9007199254740992/"},
-  {name:"A Dark Room",url:"https://bigdog234.github.io/HTML-Games-V2/adarkroom/"},
-  {name:"Achievement Unlocked",url:"https://bigdog234.github.io/HTML-Games-V2/achievementunlocked/"},
-  {name:"Age of War",url:"https://bigdog234.github.io/HTML-Games-V2/age-of-war/"},
-  {name:"Alien Hominid",url:"https://bigdog234.github.io/HTML-Games-V2/alienhominid/"},
-  {name:"Angry Birds",url:"https://bigdog234.github.io/HTML-Games-V2/angry-birds/"},
-  {name:"Asteroids",url:"https://bigdog234.github.io/HTML-Games-V2/asteroids/"},
-  {name:"Avalanche",url:"https://bigdog234.github.io/HTML-Games-V2/avalanche/"},
-  {name:"Awesome Tanks 2",url:"https://bigdog234.github.io/HTML-Games-V2/awesome-tanks-2/"},
-  {name:"Bad Ice Cream",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream/"},
-  {name:"Bad Ice Cream 2",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-2/"},
-  {name:"Bad Ice Cream 3",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-3/"},
-  {name:"Baldi’s Basics",url:"https://bigdog234.github.io/HTML-Games-V2/baldis-basics/"},
+  {name:"1v1.lol",url:"https://craep0.github.io/1v1-lol-online.github.io/file/#"},
   {name:"Basketball Stars",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-stars/"},
-  {name:"Basketball Legends 2020",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-legends-2020/"},
-  {name:"Big Red Button",url:"https://bigdog234.github.io/HTML-Games-V2/bigredbutton/"},
-  {name:"Binding of Isaac",url:"https://bigdog234.github.io/HTML-Games-V2/binding-of-isaac/"},
-  {name:"Bloxorz",url:"https://bigdog234.github.io/HTML-Games-V2/bloxors/"},
-  {name:"Boxel Rebound",url:"https://bigdog234.github.io/HTML-Games-V2/boxel-rebound/"},
-  {name:"Boxhead 2Play",url:"https://bigdog234.github.io/HTML-Games-V2/boxhead2play/"},
-  {name:"Breaking the Bank",url:"https://bigdog234.github.io/HTML-Games-V2/breakingthebank/"},
-  {name:"Breakout",url:"https://bigdog234.github.io/HTML-Games-V2/breakout/"},
-  {name:"BTD4",url:"https://bigdog234.github.io/HTML-Games-V2/btd4/"},
-  {name:"Cannon Basketball 4",url:"https://bigdog234.github.io/HTML-Games-V2/cannon-basketball-4/"},
-  {name:"Canyon Defense",url:"https://bigdog234.github.io/HTML-Games-V2/canyondefense/"},
-  {name:"Cell Machine",url:"https://bigdog234.github.io/HTML-Games-V2/cell-machine/"},
-  {name:"Chess",url:"https://bigdog234.github.io/HTML-Games-V2/chess/"},
-  {name:"Chrome Dino",url:"https://bigdog234.github.io/HTML-Games-V2/chrome-dino/"},
-  {name:"Cookie Clicker (fork)",url:"https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/"},
-  {name:"CookieClicker (alt)",url:"https://bigdog234.github.io/HTML-Games-V2/cookieclicker/"},
-  {name:"Core Ball",url:"https://bigdog234.github.io/HTML-Games-V2/core-ball/"},
-  {name:"CraftMine",url:"https://bigdog234.github.io/HTML-Games-V2/craftmine/"},
-  {name:"Creative Kill Chamber",url:"https://bigdog234.github.io/HTML-Games-V2/creativekillchamber/"},
-  {name:"Crossy Road",url:"https://bigdog234.github.io/HTML-Games-V2/crossyroad/"},
-  {name:"CSGO Clicker",url:"https://bigdog234.github.io/HTML-Games-V2/csgo-clicker/"}
+  {name:"Cookie Clicker",url:"https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/"},
+  {name:"Crossy Road",url:"https://bigdog234.github.io/HTML-Games-V2/crossyroad/"}
 ];
 
 const grid=document.getElementById("gameGrid");
+const taskbar=document.getElementById("taskbar");
 
+let zIndexCounter=100;
+let windowIdCounter=0;
+
+// Create game buttons
 games.forEach(game=>{
   const div=document.createElement("div");
   div.className="game";
@@ -72,25 +47,42 @@ games.forEach(game=>{
 });
 
 function openWindow(game){
+  const id="win"+(++windowIdCounter);
+
   const win=document.createElement("div");
   win.className="window";
+  win.dataset.id=id;
+  win.style.top=Math.random()*200+50+"px";
+  win.style.left=Math.random()*200+50+"px";
+  win.style.zIndex=++zIndexCounter;
+
   win.innerHTML=`
     <div class="titlebar">
       <span>${game.name}</span>
       <div>
-        <button onclick="this.closest('.window').style.display='none'">➖</button>
-        <button onclick="this.closest('.window').requestFullscreen()">⛶</button>
-        <button onclick="this.closest('.window').remove()">✕</button>
+        <button onclick="minimizeWindow('${id}')">➖</button>
+        <button onclick="fullscreenWindow('${id}')">⛶</button>
+        <button onclick="closeWindow('${id}')">✕</button>
       </div>
     </div>
     <iframe src="${game.url}"></iframe>
   `;
   document.body.appendChild(win);
 
-  // DRAGGING
-  const title=win.querySelector(".titlebar");
-  let isDragging=false, offsetX=0, offsetY=0;
+  // Taskbar button
+  const taskBtn=document.createElement("div");
+  taskBtn.className="taskbtn active";
+  taskBtn.innerText=game.name;
+  taskBtn.dataset.id=id;
+  taskBtn.onclick=()=>focusWindow(id);
+  taskbar.appendChild(taskBtn);
 
+  // Focus on click
+  win.addEventListener("mousedown",()=>focusWindow(id));
+
+  // Dragging
+  const title=win.querySelector(".titlebar");
+  let isDragging=false,offsetX=0,offsetY=0;
   title.addEventListener("mousedown",(e)=>{
     isDragging=true;
     const rect=win.getBoundingClientRect();
@@ -103,10 +95,37 @@ function openWindow(game){
     win.style.left=(e.clientX-offsetX)+"px";
     win.style.top=(e.clientY-offsetY)+"px";
   });
-  document.addEventListener("mouseup",(e)=>{
-    isDragging=false;
-    title.style.cursor="grab";
-  });
+  document.addEventListener("mouseup",()=>{isDragging=false;title.style.cursor="grab";});
+
+  focusWindow(id);
+}
+
+function focusWindow(id){
+  const win=document.querySelector(`.window[data-id='${id}']`);
+  if(!win) return;
+  win.style.display="flex";
+  win.style.zIndex=++zIndexCounter;
+
+  document.querySelectorAll(".taskbtn").forEach(btn=>btn.classList.remove("active"));
+  const taskBtn=document.querySelector(`.taskbtn[data-id='${id}']`);
+  if(taskBtn) taskBtn.classList.add("active");
+}
+
+function closeWindow(id){
+  const win=document.querySelector(`.window[data-id='${id}']`);
+  const taskBtn=document.querySelector(`.taskbtn[data-id='${id}']`);
+  if(win) win.remove();
+  if(taskBtn) taskBtn.remove();
+}
+
+function minimizeWindow(id){
+  const win=document.querySelector(`.window[data-id='${id}']`);
+  if(win) win.style.display="none";
+}
+
+function fullscreenWindow(id){
+  const win=document.querySelector(`.window[data-id='${id}']`);
+  if(win) win.requestFullscreen();
 }
 </script>
 </body>
