@@ -1,291 +1,24 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Unblocked Games - Launcher</title>
-<style>
-  :root{
-    --bg: linear-gradient(180deg,#1f2937,#0f172a);
-    --tile-size: 84px;
-    --accent: #3b82f6;
-    --text: #e5e7eb;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,Segoe UI,system-ui,-apple-system,Arial;background:var(--bg);color:var(--text);overflow:hidden}
-  .wallpaper{
-    position:fixed;inset:0;background-image: url('https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=');background-size:cover;filter:brightness(.6);z-index:0;
-  }
-  .desktop{position:relative;z-index:1;height:100%;padding:18px;box-sizing:border-box}
-  #topbar{position:fixed;left:0;right:0;top:0;height:36px;background:rgba(0,0,0,.25);backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 12px;gap:12px;z-index:5}
-  #search{flex:1;display:flex;align-items:center;background:rgba(255,255,255,.06);padding:6px 8px;border-radius:8px}
-  #search input{background:transparent;border:none;outline:none;color:var(--text);width:100%}
-  #startBtn{background:rgba(255,255,255,.06);border:none;padding:6px 10px;border-radius:8px;color:var(--text);cursor:pointer}
-  .icons{display:flex;flex-wrap:wrap;gap:14px;padding-top:46px}
-  .icon{
-    width:var(--tile-size);height:var(--tile-size);display:flex;flex-direction:column;align-items:center;cursor:pointer;
-    user-select:none;text-align:center
-  }
-  .icon .img{
-    width:64px;height:64px;border-radius:10px;background:#ffffff11;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--text);overflow:hidden
-  }
-  .icon .label{font-size:12px;margin-top:6px;color:var(--text);width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  /* context menu */
-  .ctx{position:fixed;background:#0b1220;border:1px solid rgba(255,255,255,.06);padding:6px;border-radius:6px;display:none;z-index:60;min-width:140px}
-  .ctx button{display:block;background:transparent;border:none;color:var(--text);width:100%;text-align:left;padding:6px;border-radius:4px;cursor:pointer}
-  .ctx button:hover{background:#ffffff08}
-  /* app window */
-  .app{
-    position:fixed;left:10%;top:8%;width:80%;height:84%;background:#071021;border:1px solid rgba(255,255,255,.06);border-radius:8px;display:none;flex-direction:column;z-index:55;box-shadow:0 10px 30px rgba(0,0,0,.6)
-  }
-  .app .titlebar{height:38px;background:linear-gradient(180deg,#0b1220,#071021);display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:var(--text);border-bottom:1px solid rgba(255,255,255,.03);cursor:grab}
-  .app iframe{flex:1;border-radius:0;background:#000}
-  .app .controls{display:flex;gap:8px}
-  .app .controls button{background:transparent;border:none;color:var(--text);padding:6px;border-radius:6px;cursor:pointer}
-  .startmenu{
-    position:fixed;left:12px;bottom:12px;background:rgba(7,10,15,.7);border-radius:10px;padding:8px;width:340px;z-index:50;display:none;box-shadow:0 6px 30px rgba(0,0,0,.5)
-  }
-  .startmenu .recent{display:flex;flex-wrap:wrap;gap:8px}
-  .startmenu .recent .sicon{width:64px;height:64px;border-radius:8px;background:#ffffff08;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:20px}
-  /* small touches */
-  .hidden{display:none}
-  .draggable{position:absolute}
-  @media (max-width:720px){:root{--tile-size:72px}.startmenu{width:92%}}
-</style>
-</head>
-<body>
-  <div class="wallpaper"></div>
-  <div id="topbar">
-    <div id="search"><input id="searchInput" placeholder="Search apps/games..." /></div>
-    <button id="startBtn">Start</button>
-  </div>
-
-  <div class="desktop" id="desktop">
-    <div class="icons" id="icons"></div>
-  </div>
-
-  <div class="ctx" id="ctxMenu">
-    <button data-action="open">Open</button>
-    <button data-action="move">Move</button>
-    <button data-action="open-new">Open in new tab</button>
-    <button data-action="remove">Remove</button>
-  </div>
-
-  <div class="app" id="appWindow" role="dialog" aria-hidden="true">
-    <div class="titlebar" id="appTitlebar">
-      <div id="appTitle">App</div>
-      <div class="controls">
-        <button id="btnMin">_</button>
-        <button id="btnMax">◻</button>
-        <button id="btnClose">✕</button>
-      </div>
-    </div>
-    <iframe id="appFrame" src="" frameborder="0" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
-  </div>
-
-  <div class="startmenu" id="startMenu">
-    <div style="margin-bottom:8px"><strong>All Games</strong></div>
-    <div class="recent" id="startList"></div>
-  </div>
-
 <script>
-/* --------------------------
-   Games list - edit here
-   Each item: {id,title,url,icon}
-   icon can be an emoji, emoji string, or image URL
-   -------------------------- */
-const games = [
-  {id:'2048', title:'2048', url:'https://bigdog234.github.io/HTML-Games-V2/2048/', icon:'🔢'},
-  {id:'2048-m', title:'2048 Multitask', url:'https://bigdog234.github.io/HTML-Games-V2/2048-multitask/', icon:'📚'},
-  {id:'1v1lol', title:'1v1.lol', url:'https://bigdog234.github.io/HTML-Games-V2/1v1lol/', icon:'🕹️'},
-  {id:'1v1space', title:'1v1space', url:'https://bigdog234.github.io/HTML-Games-V2/1v1space/', icon:'🚀'},
-  {id:'8ball', title:'8 Ball Billiards', url:'https://bigdog234.github.io/HTML-Games-V2/8ball-billards-classic/', icon:'🎱'},
-  {id:'9007', title:'9007199254740992', url:'https://bigdog234.github.io/HTML-Games-V2/9007199254740992/', icon:'🔢'},
-  {id:'adarkroom', title:'A Dark Room', url:'https://bigdog234.github.io/HTML-Games-V2/adarkroom/', icon:'🌑'},
-  {id:'achievement', title:'Achievement Unlocked', url:'https://bigdog234.github.io/HTML-Games-V2/achievementunlocked/', icon:'🏆'},
-  {id:'ageofwar', title:'Age of War', url:'https://bigdog234.github.io/HTML-Games-V2/age-of-war/', icon:'⚔️'},
-  {id:'alien', title:'Alien Hominid', url:'https://bigdog234.github.io/HTML-Games-V2/alienhominid/', icon:'👽'},
-  {id:'angry', title:'Angry Birds', url:'https://bigdog234.github.io/HTML-Games-V2/angry-birds/', icon:'🐦'},
-  {id:'ast', title:'Asteroids', url:'https://bigdog234.github.io/HTML-Games-V2/asteroids/', icon:'☄️'},
-  {id:'avalanche', title:'Avalanche', url:'https://bigdog234.github.io/HTML-Games-V2/avalanche/', icon:'❄️'},
-  {id:'awesome', title:'Awesome Tanks 2', url:'https://bigdog234.github.io/HTML-Games-V2/awesome-tanks-2/', icon:'🛡️'},
-  {id:'badice1', title:'Bad Ice Cream', url:'https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream/', icon:'🍦'},
-  {id:'badice2', title:'Bad Ice Cream 2', url:'https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-2/', icon:'🍨'},
-  {id:'badice3', title:'Bad Ice Cream 3', url:'https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-3/', icon:'🍧'},
-  {id:'baldi', title:'Baldi’s Basics', url:'https://bigdog234.github.io/HTML-Games-V2/baldis-basics/', icon:'📚'},
-  {id:'basket', title:'Basketball Stars', url:'https://bigdog234.github.io/HTML-Games-V2/basketball-stars/', icon:'🏀'},
-  {id:'basket2', title:'Basketball Legends 2020', url:'https://bigdog234.github.io/HTML-Games-V2/basketball-legends-2020/', icon:'🏆'},
-  {id:'bigred', title:'Big Red Button', url:'https://bigdog234.github.io/HTML-Games-V2/bigredbutton/', icon:'🔴'},
-  {id:'binding', title:'Binding of Isaac', url:'https://bigdog234.github.io/HTML-Games-V2/binding-of-isaac/', icon:'🕯️'},
-  {id:'blox', title:'Bloxorz', url:'https://bigdog234.github.io/HTML-Games-V2/bloxors/', icon:'🧊'},
-  {id:'boxel', title:'Boxel Rebound', url:'https://bigdog234.github.io/HTML-Games-V2/boxel-rebound/', icon:'📦'},
-  {id:'boxhead', title:'Boxhead 2Play', url:'https://bigdog234.github.io/HTML-Games-V2/boxhead2play/', icon:'🧟'},
-  {id:'breakbank', title:'Breaking the Bank', url:'https://bigdog234.github.io/HTML-Games-V2/breakingthebank/', icon:'🏦'},
-  {id:'breakout', title:'Breakout', url:'https://bigdog234.github.io/HTML-Games-V2/breakout/', icon:'🧱'},
-  {id:'btd4', title:'BTD4', url:'https://bigdog234.github.io/HTML-Games-V2/btd4/', icon:'🧠'},
-  {id:'cannon', title:'Cannon Basketball 4', url:'https://bigdog234.github.io/HTML-Games-V2/cannon-basketball-4/', icon:'🏀'},
-  {id:'canyon', title:'Canyon Defense', url:'https://bigdog234.github.io/HTML-Games-V2/canyondefense/', icon:'🛡️'},
-  {id:'cell', title:'Cell Machine', url:'https://bigdog234.github.io/HTML-Games-V2/cell-machine/', icon:'🧬'},
-  {id:'chess', title:'Chess', url:'https://bigdog234.github.io/HTML-Games-V2/chess/', icon:'♟️'},
-  {id:'dino', title:'Chrome Dino', url:'https://bigdog234.github.io/HTML-Games-V2/chrome-dino/', icon:'🦖'},
-  {id:'cookie', title:'Cookie Clicker (fork)', url:'https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/', icon:'🍪'},
-  {id:'cookie2', title:'CookieClicker (alt)', url:'https://bigdog234.github.io/HTML-Games-V2/cookieclicker/', icon:'🍪'},
-  {id:'core', title:'Core Ball', url:'https://bigdog234.github.io/HTML-Games-V2/core-ball/', icon:'⚪'},
-  {id:'craft', title:'CraftMine', url:'https://bigdog234.github.io/HTML-Games-V2/craftmine/', icon:'⛏️'},
-  {id:'creative', title:'Creative Kill Chamber', url:'https://bigdog234.github.io/HTML-Games-V2/creativekillchamber/', icon:'💣'},
-  {id:'crossy', title:'Crossy Road', url:'https://bigdog234.github.io/HTML-Games-V2/crossyroad/', icon:'🐤'},
-  {id:'csgo', title:'CSGO Clicker', url:'https://bigdog234.github.io/HTML-Games-V2/csgo-clicker/', icon:'🔫'},
-  {id:'cubefield', title:'Cubefield', url:'https://bigdog234.github.io/HTML-Games-V2/cubefield/', icon:'⬛'},
-  {id:'cupcake', title:'Cupcake 2048', url:'https://bigdog234.github.io/HTML-Games-V2/cupcake2048/', icon:'🧁'},
-  {id:'cutrope', title:'Cut the Rope', url:'https://bigdog234.github.io/HTML-Games-V2/cuttherope/', icon:'✂️'},
-  {id:'cutrope2', title:'Cut the Rope 2', url:'https://bigdog234.github.io/HTML-Games-V2/cuttherope2/', icon:'✂️'},
-  {id:'dadish', title:'Dadish', url:'/dadish/', icon:'🍽️'},
-  {id:'dadishtwo', title:'Dadish 2', url:'/dadishtwo/', icon:'🍽️'},
-  {id:'dadish3', title:'Dadish 3', url:'/dadish3/', icon:'🍽️'},
-  {id:'ctr', title:'CTR', url:'/ctr/', icon:'🚗'},
-  {id:'cubefield', title:'Cubefield', url:'https://bigdog234.github.io/HTML-Games-V2/cubefield/', icon:'⬛'},
-  {id:'cuttherope2', title:'Cut the Rope 2', url:'https://bigdog234.github.io/HTML-Games-V2/cuttherope2/', icon:'✂️'}
-];
-
-/* --------------------------
-   End editable area
-   -------------------------- */
-
-const iconsEl = document.getElementById('icons');
-const ctx = document.getElementById('ctxMenu');
-let ctxTarget = null;
-const app = document.getElementById('appWindow');
-const appFrame = document.getElementById('appFrame');
-const appTitle = document.getElementById('appTitle');
-const startBtn = document.getElementById('startBtn');
-const startMenu = document.getElementById('startMenu');
-const startList = document.getElementById('startList');
-const searchInput = document.getElementById('searchInput');
-
-// render icons
-function renderIcons(filter=''){
-  iconsEl.innerHTML = '';
-  const q = filter.trim().toLowerCase();
-  games.forEach(g=>{
-    if(q && !(g.title.toLowerCase().includes(q) || (g.id && g.id.includes(q)))) return;
-    const node = document.createElement('div');
-    node.className='icon';
-    node.dataset.id = g.id;
-    node.innerHTML = `<div class="img">${g.icon && g.icon.startsWith('http') ? `<img src="${g.icon}" style="width:100%;height:100%;object-fit:cover">` : g.icon}</div>
-                      <div class="label" title="${g.title}">${g.title}</div>`;
-    iconsEl.appendChild(node);
-
-    // events
-    node.addEventListener('click', (e)=> openApp(g));
-    node.addEventListener('contextmenu', (e)=>{
-      e.preventDefault();
-      ctxTarget = {el:node,game:g};
-      showCtx(e.pageX,e.pageY);
-    });
-    // allow dragging by move toggle - we'll set draggable class when active
-  });
-  renderStartList();
-}
-
-function renderStartList(){
-  startList.innerHTML='';
-  // show first 12 as shortcuts
-  games.slice(0,12).forEach(g=>{
-    const s = document.createElement('div');
-    s.className='sicon';
-    s.title=g.title;
-    s.textContent = g.icon || '◻';
-    s.addEventListener('click',()=>openApp(g));
-    startList.appendChild(s);
-  });
-}
-
-// context menu actions
-ctx.addEventListener('click',(e)=>{
-  const act = e.target.dataset.action;
-  if(!act || !ctxTarget) return;
-  const {el,game} = ctxTarget;
-  if(act==='open') openApp(game);
-  if(act==='move') toggleMove(el);
-  if(act==='open-new') window.open(game.url,'_blank');
-  if(act==='remove'){ el.remove(); // remove from DOM, also remove from games array
-    const idx = games.findIndex(x=>x.id===game.id);
-    if(idx>=0) games.splice(idx,1);
-  }
-  hideCtx();
-});
-
-function showCtx(x,y){
-  ctx.style.display='block';
-  const cw = ctx.offsetWidth, ch=ctx.offsetHeight;
-  const maxX = window.innerWidth - cw - 8;
-  const maxY = window.innerHeight - ch - 8;
-  ctx.style.left = Math.min(x, maxX)+'px';
-  ctx.style.top = Math.min(y, maxY)+'px';
-}
-
-function hideCtx(){ ctx.style.display='none'; ctxTarget=null; }
-
-// toggle move mode (makes element absolutely positioned and draggable)
-function toggleMove(el){
-  if(el.classList.contains('draggable')){
-    // disable
-    el.classList.remove('draggable');
-    el.style.position='';
-    el.style.left='';
-    el.style.top='';
-    el.onpointerdown = null;
-    el.style.cursor='pointer';
-  } else {
-    // convert to absolute at current position
-    const rect = el.getBoundingClientRect();
-    const parentRect = document.getElementById('desktop').getBoundingClientRect();
-    el.classList.add('draggable');
-    el.style.position='absolute';
-    el.style.left = (rect.left - parentRect.left) + 'px';
-    el.style.top  = (rect.top - parentRect.top) + 'px';
-    el.style.zIndex = 30;
-    el.style.cursor='grab';
-    // pointer drag
-    el.onpointerdown = pointerDrag;
-  }
-}
-
-function pointerDrag(e){
-  const el = e.currentTarget;
-  el.setPointerCapture(e.pointerId);
-  const startX = e.clientX, startY = e.clientY;
-  const sx = parseFloat(el.style.left||0), sy=parseFloat(el.style.top||0);
-  function move(ev){
-    el.style.left = (sx + ev.clientX - startX) + 'px';
-    el.style.top  = (sy + ev.clientY - startY) + 'px';
-  }
-  function up(ev){
-    el.releasePointerCapture(e.pointerId);
-    window.removeEventListener('pointermove',move);
-    window.removeEventListener('pointerup',up);
-  }
-  window.addEventListener('pointermove',move);
-  window.addEventListener('pointerup',up);
-}
-
-// open app in iframe
-function openApp(g){
-  app.style.display='flex';
-  app.setAttribute('aria-hidden','false');
-  appTitle.textContent = g.title;
-  // try to load with proxy-friendly pattern: many GitHub pages allow embedding — some may refuse (X-Frame-Options)
-  appFrame.src = g.url;
-}
+// ... keep everything else the same above ...
 
 // app controls
-document.getElementById('btnClose').addEventListener('click',()=>{ app.style.display='none'; appFrame.src=''; app.setAttribute('aria-hidden','true')});
-document.getElementById('btnMin').addEventListener('click',()=>{ app.style.display='none'; });
+document.getElementById('btnClose').addEventListener('click',()=>{
+  // close the tab entirely
+  window.close();
+});
+
+document.getElementById('btnMin').addEventListener('click',()=>{
+  app.style.display='none';
+});
+
 document.getElementById('btnMax').addEventListener('click',()=>{
-  // toggle fullscreenish
-  if(app.classList.contains('max')){
-    app.style.left='10%'; app.style.top='8%'; app.style.width='80%'; app.style.height='84%'; app.classList.remove('max');
+  // use Fullscreen API
+  if (!document.fullscreenElement) {
+    app.requestFullscreen().catch(err=>{
+      console.warn("Fullscreen request failed:", err);
+    });
   } else {
-    app.style.left='0'; app.style.top='0'; app.style.width='100%'; app.style.height='100%'; app.classList.add('max');
+    document.exitFullscreen();
   }
 });
 
@@ -294,6 +27,7 @@ document.getElementById('btnMax').addEventListener('click',()=>{
   const title = document.getElementById('appTitlebar');
   let dragging=false, sx,sy,ox,oy;
   title.addEventListener('pointerdown',(e)=>{
+    if(document.fullscreenElement) return; // don’t drag in fullscreen
     dragging=true; title.setPointerCapture(e.pointerId);
     sx=e.clientX; sy=e.clientY;
     const r=app.getBoundingClientRect();
@@ -307,36 +41,5 @@ document.getElementById('btnMax').addEventListener('click',()=>{
   window.addEventListener('pointerup',(e)=>{ dragging=false; try{ title.releasePointerCapture(e.pointerId) }catch(e){} });
 })();
 
-// start menu toggles
-startBtn.addEventListener('click',()=>{ startMenu.style.display = startMenu.style.display==='block' ? 'none' : 'block' });
-document.addEventListener('click',(e)=>{
-  if(!startMenu.contains(e.target) && e.target !== startBtn) startMenu.style.display='none';
-  // hide context menu when clicking elsewhere
-  if(!ctx.contains(e.target)) hideCtx();
-});
-
-// search
-searchInput.addEventListener('input', (e)=>{ renderIcons(e.target.value); });
-
-// keyboard: Esc hides app & ctx
-document.addEventListener('keydown',(e)=>{
-  if(e.key==='Escape'){ app.style.display='none'; hideCtx(); }
-});
-
-// initial render
-renderIcons();
-
-// prevent default right click on desktop to show our start/context interactions
-document.getElementById('desktop').addEventListener('contextmenu',(e)=>{ e.preventDefault(); hideCtx(); });
-
-// allow dropping games onto icons area? (future enhancement)
-
-/* Notes:
- - Some external pages may block being loaded in an iframe (X-Frame-Options). If a game fails to load,
-   use "Open in new tab" from the right-click menu.
- - To add more games: edit the `games` array at the top.
- - For custom icon images replace icon string with an image URL (startsWith http).
-*/
+// ... keep rest unchanged ...
 </script>
-</body>
-</html>
