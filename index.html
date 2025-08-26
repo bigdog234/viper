@@ -1,127 +1,208 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Unblocked Games Launcher</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: url('https://wallpapercave.com/wp/wp9137572.jpg') no-repeat center center/cover;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-    #desktop {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    .icon {
-      width: 80px;
-      text-align: center;
-      color: white;
-      margin: 15px;
-      cursor: pointer;
-      position: absolute;
-    }
-    .icon img {
-      width: 64px;
-      height: 64px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    }
-    .window {
-      position: absolute;
-      top: 100px;
-      left: 100px;
-      width: 800px;
-      height: 600px;
-      background: white;
-      border: 2px solid #333;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-      display: flex;
-      flex-direction: column;
-      resize: both;
-      overflow: hidden;
-    }
-    .titlebar {
-      background: #222;
-      color: white;
-      padding: 6px;
-      cursor: move;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .titlebar button {
-      background: red;
-      border: none;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 2px 8px;
-    }
-    .window iframe {
-      flex: 1;
-      border: none;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Unblocked Games Launcher — Fixed</title>
+<style>
+  :root{--text:#e6eef8;--muted:#9aa7b8;--accent:#3b82f6}
+  html,body{height:100%;margin:0;font-family:Inter,Segoe UI,system-ui,-apple-system,Arial;background:#081224;color:var(--text);}
+  .wallpaper{position:fixed;inset:0;background-image:linear-gradient(180deg,rgba(2,6,23,.65),rgba(2,6,23,.85)),url('https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1400&auto=format&fit=crop&s=');background-size:cover;z-index:0}
+  .shell{position:relative;z-index:2;height:100%;display:flex;flex-direction:column}
+  header{height:48px;display:flex;align-items:center;padding:8px 12px;gap:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);box-shadow:0 2px 10px rgba(0,0,0,.35)}
+  #search{flex:1;background:rgba(255,255,255,.03);padding:6px 10px;border-radius:8px}
+  #search input{width:100%;background:transparent;border:none;color:var(--text);outline:none}
+  #start{background:rgba(255,255,255,.04);border:0;padding:6px 10px;border-radius:8px;color:var(--text);cursor:pointer}
+  main{flex:1;display:flex;padding:18px;box-sizing:border-box}
+  .sidebar{width:220px;padding-right:14px}
+  .gridwrap{flex:1;background:rgba(255,255,255,.02);border-radius:12px;padding:16px;overflow:auto}
+  .icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:14px}
+  .icon{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px;border-radius:8px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.01));cursor:pointer}
+  .icon .img{width:72px;height:72px;border-radius:12px;background:#ffffff10;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .icon img{width:100%;height:100%;object-fit:cover;display:block}
+  .icon .label{font-size:13px;color:var(--text);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:92px}
+  /* app window */
+  .app{position:fixed;left:6%;top:6%;width:88%;height:84%;background:#061122;border-radius:10px;box-shadow:0 20px 60px rgba(2,6,23,.8);display:none;flex-direction:column;z-index:50;border:1px solid rgba(255,255,255,.04)}
+  .title{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.02)}
+  .title .left{display:flex;align-items:center;gap:10px}
+  .title .controls{display:flex;gap:8px}
+  .title button{background:transparent;border:0;color:var(--text);cursor:pointer;padding:6px;border-radius:6px}
+  .content{flex:1;display:flex;flex-direction:column}
+  .iframewrap{flex:1;background:#000;display:flex;flex-direction:column}
+  iframe{flex:1;border:0;background:#000}
+  .notice{padding:10px;border-top:1px solid rgba(255,255,255,.02);display:flex;align-items:center;gap:10px;color:var(--muted)}
+  /* context menu */
+  .ctx{position:fixed;background:#071122;border:1px solid rgba(255,255,255,.03);padding:6px;border-radius:8px;display:none;z-index:60}
+  .ctx button{display:block;background:transparent;border:0;color:var(--text);padding:6px 8px;text-align:left;cursor:pointer}
+  .ctx button:hover{background:rgba(255,255,255,.02)}
+  /* responsive */
+  @media (max-width:800px){.sidebar{display:none}.title .left .titletext{display:none}}
+</style>
 </head>
 <body>
-  <div id="desktop"></div>
-
-  <script>
-    const games = [
-      {
-        id: '2048',
-        title: '2048',
-        url: 'https://bigdog234.github.io/HTML-Games-V2/2048/',
-        icon: 'https://icons.iconarchive.com/icons/alecive/flatwoken/128/Apps-2048-icon.png'
-      },
-      {
-        id: 'cookie',
-        title: 'Cookie Clicker',
-        url: 'https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/index.html',
-        icon: 'https://cookieclicker.fandom.com/wiki/File:HeavenChip.png' // sample cookie logo
-      },
-      {
-        id: 'adarkroom',
-        title: 'A Dark Room',
-        url: 'https://bigdog234.github.io/HTML-Games-V2/adarkroom/',
-        icon: 'https://play-lh.googleusercontent.com/6PH9cN7l1Ce9SoA7fP-PmqneLspYJZpKa6ouDDxGgp41k6W7CObJgqKEnKhwZsG6V4A=w240-h480-rw'
-      },
-      {
-        id: 'baldi',
-        title: 'Baldi\'s Basics',
-        url: 'https://bigdog234.github.io/HTML-Games-V2/baldis-basics/',
-        icon: 'https://i.imgur.com/x0rj8hB.png' // fanmade Baldi icon
-      }
-    ];
-
-    const desktop = document.getElementById('desktop');
-
-    games.forEach((game, index) => {
-      const icon = document.createElement('div');
-      icon.className = 'icon';
-      icon.style.top = (20 + index*100) + 'px';
-      icon.style.left = '20px';
-      icon.innerHTML = `<img src="${game.icon}" alt="${game.title}"><div>${game.title}</div>`;
-      icon.onclick = () => openWindow(game);
-      desktop.appendChild(icon);
-    });
-
-    function openWindow(game) {
-      const win = document.createElement('div');
-      win.className = 'window';
-      win.innerHTML = `
-        <div class="titlebar">
-          <span>${game.title}</span>
-          <button onclick="this.parentElement.parentElement.remove()">X</button>
+  <div class="wallpaper"></div>
+  <div class="shell">
+    <header>
+      <div id="search"><input id="q" placeholder="Search games..." /></div>
+      <button id="start">Start</button>
+    </header>
+    <main>
+      <div class="sidebar">
+        <h3 style="margin:6px 0 12px 0;color:var(--muted)">Quick</h3>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button id="showAll" style="padding:8px;border-radius:8px;background:rgba(255,255,255,.02);border:0;color:var(--text);cursor:pointer">Show all</button>
+          <button id="addSample" style="padding:8px;border-radius:8px;background:rgba(255,255,255,.02);border:0;color:var(--text);cursor:pointer">Add sample icon</button>
         </div>
-        <iframe src="${game.url}"></iframe>
-      `;
-      desktop.appendChild(win);
+      </div>
+      <div class="gridwrap">
+        <div class="icons" id="icons"></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="ctx" id="ctx"><button data-act="open">Open</button><button data-act="new">Open in new tab</button><button data-act="move">Toggle Move</button><button data-act="remove">Remove</button></div>
+
+  <div class="app" id="app">
+    <div class="title">
+      <div class="left"><img id="appIcon" src="" alt="" style="width:28px;height:28px;border-radius:6px"><div class="titletext" id="appTitle" style="font-weight:600;color:var(--text)"></div></div>
+      <div class="controls"><button id="openNew">Open in new tab</button><button id="min">_</button><button id="close">✕</button></div>
+    </div>
+    <div class="content">
+      <div class="iframewrap"><iframe id="frame" src="" sandbox="allow-scripts allow-forms allow-same-origin"></iframe></div>
+      <div class="notice" id="notice">If a game doesn't appear, click <button id="openNew2" style="background:var(--accent);color:white;border:0;padding:6px;border-radius:6px;cursor:pointer">Open in new tab</button></div>
+    </div>
+  </div>
+
+<script>
+/* Editable games list - you can add more entries. icon may be a URL or omitted. */
+let games = [
+  {id:'2048', title:'2048', url:'https://bigdog234.github.io/HTML-Games-V2/2048/', icon:'https://icons.iconarchive.com/icons/alecive/flatwoken/128/Apps-2048-icon.png'},
+  {id:'cookie', title:'Cookie Clicker', url:'https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/', icon:''},
+  {id:'adark', title:'A Dark Room', url:'https://bigdog234.github.io/HTML-Games-V2/adarkroom/', icon:''},
+  {id:'baldi', title:"Baldi's Basics", url:'https://bigdog234.github.io/HTML-Games-V2/baldis-basics/', icon:''},
+  {id:'angry', title:'Angry Birds', url:'https://bigdog234.github.io/HTML-Games-V2/angry-birds/', icon:''}
+];
+
+const iconsEl = document.getElementById('icons');
+const ctx = document.getElementById('ctx');
+const app = document.getElementById('app');
+const frame = document.getElementById('frame');
+const appTitle = document.getElementById('appTitle');
+const appIcon = document.getElementById('appIcon');
+let currentGame = null;
+
+// helper: create fallback SVG as data URL with initials
+function svgFallback(text){
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><rect width='100%' height='100%' fill='%23223a4a'/><text x='50%' y='50%' font-size='36' fill='%23fff' text-anchor='middle' dominant-baseline='central' font-family='Arial'>${text}</text></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
+
+// try to compute candidate icon URLs for a game
+function iconCandidates(g){
+  const url = g.icon && g.icon.trim() ? g.icon.trim() : '';
+  const cands = [];
+  if(url) cands.push(url);
+  try{
+    const u = new URL(g.url);
+    cands.push(u.origin + '/favicon.ico');
+    cands.push(u.origin + '/favicon.png');
+    cands.push(u.origin + '/assets/favicon.png');
+    // also try the path root
+    cands.push(g.url + 'favicon.ico');
+  }catch(e){}
+  return cands;
+}
+
+// create one icon element
+function makeIcon(g){
+  const el = document.createElement('div'); el.className='icon';
+  const imgWrap = document.createElement('div'); imgWrap.className='img';
+  const img = document.createElement('img');
+  img.alt = g.title;
+  // placeholder while we try to load
+  img.src = svgFallback(g.title.slice(0,2));
+  imgWrap.appendChild(img);
+  const label = document.createElement('div'); label.className='label'; label.textContent = g.title;
+  el.appendChild(imgWrap); el.appendChild(label);
+
+  // attempt loading candidates sequentially
+  const cands = iconCandidates(g);
+  (async function tryLoad(){
+    for(const c of cands){
+      try{
+        // quick check by creating Image object
+        await new Promise((res,rej)=>{ const im = new Image(); im.onload=()=>res(true); im.onerror=()=>res(false); im.src=c; setTimeout(()=>res(false),2500); });
+        // if loaded set it
+        img.src = c; return;
+      }catch(e){}
     }
-  </script>
+    // nothing worked - keep svg fallback
+  })();
+
+  // left click opens
+  el.addEventListener('click',()=> openGame(g));
+  // right-click context
+  el.addEventListener('contextmenu',(ev)=>{ ev.preventDefault(); showCtx(ev.pageX,ev.pageY,g,el); });
+  return el;
+}
+
+function render(filter=''){
+  iconsEl.innerHTML='';
+  const q = filter.trim().toLowerCase();
+  games.forEach(g=>{ if(q && !g.title.toLowerCase().includes(q)) return; iconsEl.appendChild(makeIcon(g)); });
+}
+
+// context
+let ctxTarget=null;
+function showCtx(x,y,g,el){ ctxTarget={g,el}; ctx.style.display='block'; const w=ctx.offsetWidth,h=ctx.offsetHeight; ctx.style.left=Math.min(x,window.innerWidth-w-8)+'px'; ctx.style.top=Math.min(y,window.innerHeight-h-8)+'px'; }
+ctx.addEventListener('click',(e)=>{
+  const a = e.target.dataset.act;
+  if(!a || !ctxTarget) return; const {g,el}=ctxTarget;
+  if(a==='open') openGame(g);
+  if(a==='new') window.open(g.url,'_blank');
+  if(a==='move') toggleMove(el);
+  if(a==='remove') { el.remove(); games = games.filter(x=>x.id!==g.id); }
+  ctx.style.display='none'; ctxTarget=null;
+});
+
+// move: toggle absolute positioning
+function toggleMove(el){ if(el.style.position==='absolute'){ el.style.position=''; el.onpointerdown=null; } else { const r=el.getBoundingClientRect(); const pr=iconsEl.getBoundingClientRect(); el.style.position='absolute'; el.style.left=(r.left-pr.left)+'px'; el.style.top=(r.top-pr.top)+'px'; el.onpointerdown=dragStart; }}
+function dragStart(e){ const el=e.currentTarget; el.setPointerCapture(e.pointerId); const sx=e.clientX, sy=e.clientY; const ox=parseFloat(el.style.left||0), oy=parseFloat(el.style.top||0); function mv(ev){ el.style.left = (ox + ev.clientX - sx)+'px'; el.style.top = (oy + ev.clientY - sy)+'px'; } function up(ev){ el.releasePointerCapture(e.pointerId); window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); } window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up); }
+
+// open game in app window
+function openGame(g){ currentGame=g; app.style.display='flex'; appTitle.textContent=g.title; appIcon.src = svgFallback(g.title.slice(0,2)); // set fallback quickly
+  // try to set nicer icon if loadable
+  const cands = iconCandidates(g);
+  (async function tryIcon(){ for(const c of cands){ const ok = await new Promise(r=>{ const im=new Image(); im.onload=()=>r(true); im.onerror=()=>r(false); im.src=c; setTimeout(()=>r(false),2000); }); if(ok){ appIcon.src=c; break;} }})();
+  // load iframe and detect load issues
+  frame.src = g.url;
+  // show open-in-new button's target
+  document.getElementById('openNew').onclick = ()=> window.open(g.url,'_blank');
+  document.getElementById('openNew2').onclick = ()=> window.open(g.url,'_blank');
+  // attempt to detect X-Frame-Options via fetch (best-effort, may fail due to CORS)
+  (async ()=>{
+    try{
+      const res = await fetch(g.url, {method:'HEAD', mode:'no-cors'}); // HEAD with no-cors will not expose headers, but won't throw here often
+      // since we can't reliably read headers cross-origin, we'll show the notice always; users can open new tab
+    }catch(e){ /* ignore */ }
+  })();
+}
+
+// app controls
+document.getElementById('close').addEventListener('click',()=>{ app.style.display='none'; frame.src=''; });
+document.getElementById('min').addEventListener('click',()=>{ app.style.display='none'; });
+
+// search
+document.getElementById('q').addEventListener('input',(e)=>render(e.target.value));
+
+// clicks hide context
+document.addEventListener('click',(e)=>{ if(!ctx.contains(e.target)) ctx.style.display='none'; });
+
+// initial render
+render();
+
+// small helpers for demo actions
+document.getElementById('addSample').addEventListener('click',()=>{ const id='new'+Date.now(); games.push({id,title:'New Game',url:'https://bigdog234.github.io/HTML-Games-V2/2048/',icon:''}); render(); });
+</script>
 </body>
 </html>
