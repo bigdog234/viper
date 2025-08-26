@@ -43,7 +43,7 @@
       {name:"2048",url:"https://bigdog234.github.io/HTML-Games-V2/2048/"},
       {name:"2048 Multitask",url:"https://bigdog234.github.io/HTML-Games-V2/2048-multitask/"},
       {name:"1v1.lol",url:"https://craep0.github.io/1v1-lol-online.github.io/file/#"},
-      {name:"1v1space",url:"https://bigdog234.github.io/HTML-Games-V2/1v1space/"},
+      {name:"1v1.space",url:"https://bigdog234.github.io/HTML-Games-V2/1v1space/"},
       {name:"8 Ball Billiards",url:"https://bigdog234.github.io/HTML-Games-V2/8ball-billards-classic/"},
       {name:"Backrooms",url:"https://bigdog234.github.io/HTML-Games-V2/backrooms/"},
       {name:"Basketball Stars",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-stars/"},
@@ -51,12 +51,29 @@
       {name:"Crossy Road",url:"https://bigdog234.github.io/HTML-Games-V2/crossyroad/"},
       {name:"Drift Hunters",url:"https://bigdog234.github.io/HTML-Games-V2/drift-hunters/"},
       {name:"Flappy Bird",url:"https://bigdog234.github.io/HTML-Games-V2/flappybird/"},
-      {name:"Minecraft",url:"https://bigdog234.github.io/HTML-Games-V2/eaglercraft/"},
+      {name:"Minecraft (Eaglercraft)",url:"https://bigdog234.github.io/HTML-Games-V2/eaglercraft/"},
       {name:"Retro Bowl",url:"https://bigdog234.github.io/HTML-Games-V2/retro-bowl/"},
       {name:"Slope",url:"https://bigdog234.github.io/HTML-Games-V2/slope/"},
       {name:"Subway Surfers",url:"https://bigdog234.github.io/HTML-Games-V2/subway-surfers/"},
       {name:"Tunnel Rush",url:"https://bigdog234.github.io/HTML-Games-V2/tunnel-rush/"},
-      {name:"Yohoho.io",url:"https://bigdog234.github.io/HTML-Games-V2/yohoho-io/"}
+      {name:"Yohoho.io",url:"https://bigdog234.github.io/HTML-Games-V2/yohoho-io/"},
+      {name:"Bitlife",url:"https://bigdog234.github.io/HTML-Games-V2/bitlife/"},
+      {name:"Paper.io 2",url:"https://bigdog234.github.io/HTML-Games-V2/paperio-2/"},
+      {name:"Run 3",url:"https://bigdog234.github.io/HTML-Games-V2/run-3/"},
+      {name:"Smash Karts",url:"https://bigdog234.github.io/HTML-Games-V2/smash-karts/"},
+      {name:"Stickman Hook",url:"https://bigdog234.github.io/HTML-Games-V2/stickman-hook/"},
+      {name:"Tetris",url:"https://bigdog234.github.io/HTML-Games-V2/tetris/"},
+      {name:"Zombs Royale",url:"https://bigdog234.github.io/HTML-Games-V2/zombs-royale/"},
+      {name:"Granny",url:"https://bigdog234.github.io/HTML-Games-V2/granny/"},
+      {name:"Geometry Dash",url:"https://bigdog234.github.io/HTML-Games-V2/geometry-dash/"},
+      {name:"Five Nights at Freddy's",url:"https://bigdog234.github.io/HTML-Games-V2/fnaf1/"},
+      {name:"FNAF 2",url:"https://bigdog234.github.io/HTML-Games-V2/fnaf2/"},
+      {name:"FNAF 3",url:"https://bigdog234.github.io/HTML-Games-V2/fnaf3/"},
+      {name:"FNAF 4",url:"https://bigdog234.github.io/HTML-Games-V2/fnaf4/"},
+      {name:"Happy Wheels",url:"https://bigdog234.github.io/HTML-Games-V2/happywheels/"},
+      {name:"Superhot",url:"https://bigdog234.github.io/HTML-Games-V2/superhot/"},
+      {name:"Vex 5",url:"https://bigdog234.github.io/HTML-Games-V2/vex5/"},
+      {name:"Vex 6",url:"https://bigdog234.github.io/HTML-Games-V2/vex6/"}
     ];
 
     const gameList=document.getElementById("game-list");
@@ -93,9 +110,7 @@
       // Fullscreen button
       const fs=document.createElement("button");
       fs.textContent="⛶";
-      fs.onclick=()=>{ 
-        if(win.requestFullscreen) win.requestFullscreen(); 
-      };
+      fs.onclick=()=>{ if(win.requestFullscreen) win.requestFullscreen(); };
 
       // Close button
       const close=document.createElement("button");
