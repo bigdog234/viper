@@ -2,111 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unblocked Games Hub</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      overflow: hidden;
-    }
-    #game-list {
-      width: 220px;
-      height: 100vh;
-      overflow-y: auto;
-      background: #222;
-      position: fixed;
-      left: 0;
-      top: 0;
-      padding: 10px;
-    }
-    #game-list button {
-      width: 100%;
-      margin: 5px 0;
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      background: #444;
-      color: #fff;
-      cursor: pointer;
-    }
-    #game-list button:hover {
-      background: #666;
-    }
-    #desktop {
-      margin-left: 220px;
-      height: calc(100vh - 40px);
-      position: relative;
-      overflow: hidden;
-    }
-    .window {
-      position: absolute;
-      width: 800px;
-      height: 500px;
-      border: 2px solid #666;
-      background: #000;
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-    .titlebar {
-      height: 30px;
-      background: #333;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: move;
-      padding: 0 10px;
-      border-bottom: 1px solid #555;
-    }
-    .titlebar span {
-      font-size: 14px;
-    }
-    .titlebar button {
-      background: red;
-      border: none;
-      color: white;
-      width: 20px;
-      height: 20px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-    }
-    #taskbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 40px;
-      background: #222;
-      display: flex;
-      align-items: center;
-      padding: 0 5px;
-      overflow-x: auto;
-    }
-    #taskbar button {
-      margin: 0 3px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 4px;
-      background: #444;
-      color: #fff;
-      cursor: pointer;
-    }
-    #taskbar button:hover {
-      background: #666;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #111; color: #fff; }
+    header { background: #222; padding: 10px; text-align: center; font-size: 24px; }
+    #search { width: 95%; margin: 10px auto; display: block; padding: 10px; font-size: 16px; border-radius: 5px; border: none; }
+    #game-list { display: grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap: 12px; padding: 10px; }
+    .game { background: #333; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .game:hover { background: #555; }
+
+    /* Window styling */
+    .window { position: absolute; top: 80px; left: 80px; width: 800px; height: 500px; background: #000; border: 2px solid #555; border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+    .title-bar { background: #222; padding: 5px; display: flex; justify-content: space-between; align-items: center; cursor: move; }
+    .title-bar span { font-weight: bold; }
+    .title-bar button { background: #444; border: none; color: white; margin-left: 4px; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+    .title-bar button:hover { background: #666; }
+    iframe { flex-grow: 1; border: none; border-radius: 0 0 8px 8px; width: 100%; height: 100%; }
+
+    /* Taskbar */
+    #taskbar { position: fixed; bottom: 0; left: 0; right: 0; background: #222; padding: 5px; display: flex; gap: 5px; overflow-x: auto; }
+    #taskbar button { background: #444; border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    #taskbar button:hover { background: #666; }
   </style>
 </head>
 <body>
+  <header>🎮 Unblocked Games Hub</header>
+
+  <!-- Search Bar -->
+  <input type="text" id="search" placeholder="Search games...">
+
+  <!-- Game List -->
   <div id="game-list"></div>
-  <div id="desktop"></div>
+
+  <!-- Taskbar -->
   <div id="taskbar"></div>
 
   <script>
@@ -116,113 +45,98 @@
       {name:"1v1.lol",url:"https://craep0.github.io/1v1-lol-online.github.io/file/#"},
       {name:"1v1space",url:"https://bigdog234.github.io/HTML-Games-V2/1v1space/"},
       {name:"8 Ball Billiards",url:"https://bigdog234.github.io/HTML-Games-V2/8ball-billards-classic/"},
-      {name:"9007199254740992",url:"https://bigdog234.github.io/HTML-Games-V2/9007199254740992/"},
-      {name:"A Dark Room",url:"https://bigdog234.github.io/HTML-Games-V2/adarkroom/"},
-      {name:"Achievement Unlocked",url:"https://bigdog234.github.io/HTML-Games-V2/achievementunlocked/"},
-      {name:"Age of War",url:"https://bigdog234.github.io/HTML-Games-V2/age-of-war/"},
-      {name:"Alien Hominid",url:"https://bigdog234.github.io/HTML-Games-V2/alienhominid/"},
-      {name:"Angry Birds",url:"https://bigdog234.github.io/HTML-Games-V2/angry-birds/"},
-      {name:"Asteroids",url:"https://bigdog234.github.io/HTML-Games-V2/asteroids/"},
-      {name:"Avalanche",url:"https://bigdog234.github.io/HTML-Games-V2/avalanche/"},
-      {name:"Awesome Tanks 2",url:"https://bigdog234.github.io/HTML-Games-V2/awesome-tanks-2/"},
-      {name:"Bad Ice Cream",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream/"},
-      {name:"Bad Ice Cream 2",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-2/"},
-      {name:"Bad Ice Cream 3",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-3/"},
-      {name:"Baldi’s Basics",url:"https://bigdog234.github.io/HTML-Games-V2/baldis-basics/"},
+      {name:"Backrooms",url:"https://bigdog234.github.io/HTML-Games-V2/backrooms/"},
       {name:"Basketball Stars",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-stars/"},
-      {name:"Basketball Legends 2020",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-legends-2020/"},
-      {name:"Big Red Button",url:"https://bigdog234.github.io/HTML-Games-V2/bigredbutton/"},
-      {name:"Binding of Isaac",url:"https://bigdog234.github.io/HTML-Games-V2/binding-of-isaac/"},
-      {name:"Bloxorz",url:"https://bigdog234.github.io/HTML-Games-V2/bloxors/"},
-      {name:"Boxel Rebound",url:"https://bigdog234.github.io/HTML-Games-V2/boxel-rebound/"},
-      {name:"Boxhead 2Play",url:"https://bigdog234.github.io/HTML-Games-V2/boxhead2play/"},
-      {name:"Breaking the Bank",url:"https://bigdog234.github.io/HTML-Games-V2/breakingthebank/"},
-      {name:"Breakout",url:"https://bigdog234.github.io/HTML-Games-V2/breakout/"},
-      {name:"BTD4",url:"https://bigdog234.github.io/HTML-Games-V2/btd4/"},
-      {name:"Cannon Basketball 4",url:"https://bigdog234.github.io/HTML-Games-V2/cannon-basketball-4/"},
-      {name:"Canyon Defense",url:"https://bigdog234.github.io/HTML-Games-V2/canyondefense/"},
-      {name:"Cell Machine",url:"https://bigdog234.github.io/HTML-Games-V2/cell-machine/"},
-      {name:"Chess",url:"https://bigdog234.github.io/HTML-Games-V2/chess/"},
-      {name:"Chrome Dino",url:"https://bigdog234.github.io/HTML-Games-V2/chrome-dino/"},
-      {name:"City Blocks 2",url:"https://bigdog234.github.io/HTML-Games-V2/city-blocks-2/"},
-      {name:"Clean Up IO",url:"https://bigdog234.github.io/HTML-Games-V2/clean-up-io/"},
-      {name:"Cluster Rush",url:"https://bigdog234.github.io/HTML-Games-V2/cluster-rush/"},
       {name:"Cookie Clicker",url:"https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/"},
-      {name:"CookieClicker (alt)",url:"https://bigdog234.github.io/HTML-Games-V2/cookieclicker/"},
-      {name:"Core Ball",url:"https://bigdog234.github.io/HTML-Games-V2/core-ball/"},
-      {name:"CraftMine",url:"https://bigdog234.github.io/HTML-Games-V2/craftmine/"},
-      {name:"Creative Kill Chamber",url:"https://bigdog234.github.io/HTML-Games-V2/creativekillchamber/"},
       {name:"Crossy Road",url:"https://bigdog234.github.io/HTML-Games-V2/crossyroad/"},
-      {name:"CSGO Clicker",url:"https://bigdog234.github.io/HTML-Games-V2/csgo-clicker/"},
-      {name:"Cubefield",url:"https://bigdog234.github.io/HTML-Games-V2/cubefield/"},
-      {name:"Cupcake 2048",url:"https://bigdog234.github.io/HTML-Games-V2/cupcake2048/"},
-      {name:"Cut the Rope",url:"https://bigdog234.github.io/HTML-Games-V2/cuttherope/"},
-      {name:"Cut the Rope 2",url:"https://bigdog234.github.io/HTML-Games-V2/cuttherope2/"}
+      {name:"Drift Hunters",url:"https://bigdog234.github.io/HTML-Games-V2/drift-hunters/"},
+      {name:"Flappy Bird",url:"https://bigdog234.github.io/HTML-Games-V2/flappybird/"},
+      {name:"Minecraft",url:"https://bigdog234.github.io/HTML-Games-V2/eaglercraft/"},
+      {name:"Retro Bowl",url:"https://bigdog234.github.io/HTML-Games-V2/retro-bowl/"},
+      {name:"Slope",url:"https://bigdog234.github.io/HTML-Games-V2/slope/"},
+      {name:"Subway Surfers",url:"https://bigdog234.github.io/HTML-Games-V2/subway-surfers/"},
+      {name:"Tunnel Rush",url:"https://bigdog234.github.io/HTML-Games-V2/tunnel-rush/"},
+      {name:"Yohoho.io",url:"https://bigdog234.github.io/HTML-Games-V2/yohoho-io/"}
     ];
 
     const gameList=document.getElementById("game-list");
-    const desktop=document.getElementById("desktop");
     const taskbar=document.getElementById("taskbar");
+    const search=document.getElementById("search");
+    let windowsCount=0;
 
-    function createWindow(game){
-      const win=document.createElement("div");
-      win.className="window";
-      win.style.left=Math.random()*200+50+"px";
-      win.style.top=Math.random()*100+50+"px";
-
-      const title=document.createElement("div");
-      title.className="titlebar";
-      const label=document.createElement("span");
-      label.textContent=game.name;
-      const close=document.createElement("button");
-      close.textContent="X";
-      title.appendChild(label);
-      title.appendChild(close);
-      win.appendChild(title);
-
-      const iframe=document.createElement("iframe");
-      iframe.src=game.url;
-      win.appendChild(iframe);
-      desktop.appendChild(win);
-
-      const taskBtn=document.createElement("button");
-      taskBtn.textContent=game.name;
-      taskbar.appendChild(taskBtn);
-
-      // close button
-      close.onclick=()=>{
-        desktop.removeChild(win);
-        taskbar.removeChild(taskBtn);
-      };
-      // taskbar toggle
-      taskBtn.onclick=()=>{
-        if(win.style.display==="none"){ win.style.display="flex"; }
-        else { win.style.display="none"; }
-      };
-
-      // dragging
-      let offsetX,offsetY,isDown=false;
-      title.addEventListener("mousedown",(e)=>{
-        isDown=true;
-        offsetX=e.clientX-win.offsetLeft;
-        offsetY=e.clientY-win.offsetTop;
-      });
-      document.addEventListener("mouseup",()=>isDown=false);
-      document.addEventListener("mousemove",(e)=>{
-        if(isDown){
-          win.style.left=e.clientX-offsetX+"px";
-          win.style.top=e.clientY-offsetY+"px";
-        }
+    // Render game list
+    function renderGames(filter="") {
+      gameList.innerHTML="";
+      games.filter(g=>g.name.toLowerCase().includes(filter.toLowerCase())).forEach(g=>{
+        const div=document.createElement("div");
+        div.className="game";
+        div.textContent=g.name;
+        div.onclick=()=>openGame(g.name,g.url);
+        gameList.appendChild(div);
       });
     }
 
-    // list buttons
-    games.forEach(game=>{
+    // Open game window
+    function openGame(name,url){
+      windowsCount++;
+      const win=document.createElement("div");
+      win.className="window";
+      win.style.zIndex=1000+windowsCount;
+
+      // Title bar
+      const bar=document.createElement("div");
+      bar.className="title-bar";
+      const title=document.createElement("span");
+      title.textContent=name;
+      const controls=document.createElement("div");
+
+      // Fullscreen button
+      const fs=document.createElement("button");
+      fs.textContent="⛶";
+      fs.onclick=()=>{ 
+        if(win.requestFullscreen) win.requestFullscreen(); 
+      };
+
+      // Close button
+      const close=document.createElement("button");
+      close.textContent="✖";
+      close.onclick=()=>{
+        document.body.removeChild(win);
+        taskbar.removeChild(btn);
+      };
+
+      controls.appendChild(fs);
+      controls.appendChild(close);
+      bar.appendChild(title);
+      bar.appendChild(controls);
+      win.appendChild(bar);
+
+      // iFrame
+      const iframe=document.createElement("iframe");
+      iframe.src=url;
+      win.appendChild(iframe);
+
+      document.body.appendChild(win);
+
+      // Taskbar button
       const btn=document.createElement("button");
-      btn.textContent=game.name;
-      btn.onclick=()=>createWindow(game);
-      gameList.appendChild(btn);
-    });
+      btn.textContent=name;
+      btn.onclick=()=>{ win.style.zIndex=++windowsCount; };
+      taskbar.appendChild(btn);
+
+      // Dragging
+      let isDown=false,offX=0,offY=0;
+      bar.onmousedown=e=>{ isDown=true; offX=e.offsetX; offY=e.offsetY; };
+      document.onmouseup=()=>isDown=false;
+      document.onmousemove=e=>{
+        if(isDown){ win.style.left=e.pageX-offX+"px"; win.style.top=e.pageY-offY+"px"; }
+      };
+    }
+
+    // Search
+    search.addEventListener("input",e=>renderGames(e.target.value));
+
+    renderGames();
   </script>
 </body>
 </html>
