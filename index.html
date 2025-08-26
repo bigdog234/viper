@@ -1,103 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Unblocked Games Launcher</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #1a1a1a;
-      color: #fff;
-    }
-    .grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 20px;
-    }
-    .game {
-      padding: 10px 15px;
-      background: #333;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 200px;
-      text-align: center;
-    }
-    .window {
-      position: fixed;
-      top: 50px;
-      left: 50px;
-      width: 80%;
-      height: 80%;
-      background: #222;
-      border: 2px solid #555;
-      display: flex;
-      flex-direction: column;
-      z-index: 999;
-    }
-    .titlebar {
-      background: #444;
-      padding: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .titlebar button {
-      margin-left: 5px;
-      cursor: pointer;
-      border: none;
-      background: #666;
-      color: #fff;
-      padding: 2px 8px;
-    }
-    iframe {
-      flex: 1;
-      border: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Unblocked Games Launcher</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#1a1a1a;color:#fff}
+h1{text-align:center;padding:10px}
+.grid{display:flex;flex-wrap:wrap;gap:10px;padding:20px}
+.game{padding:10px 15px;background:#333;border-radius:6px;cursor:pointer;width:180px;text-align:center}
+.window{position:fixed;top:50px;left:50px;width:80%;height:80%;background:#222;border:2px solid #555;display:flex;flex-direction:column;z-index:999}
+.titlebar{background:#444;padding:5px;display:flex;justify-content:space-between;align-items:center}
+.titlebar button{margin-left:5px;cursor:pointer;border:none;background:#666;color:#fff;padding:2px 8px}
+iframe{flex:1;border:none}
+</style>
 </head>
 <body>
-  <h1 style="text-align:center;">🎮 Unblocked Games Launcher</h1>
-  <div class="grid" id="gameGrid"></div>
+<h1>🎮 Unblocked Games Launcher</h1>
+<div class="grid" id="gameGrid"></div>
+<script>
+// -------------------------
+// Editable games list
+// Add icons later by adding icon: "URL"
+// -------------------------
+const games=[
+  {name:"2048",url:"https://bigdog234.github.io/HTML-Games-V2/2048/"},
+  {name:"2048 Multitask",url:"https://bigdog234.github.io/HTML-Games-V2/2048-multitask/"},
+  {name:"1v1.lol",url:"https://bigdog234.github.io/HTML-Games-V2/1v1lol/"},
+  {name:"1v1space",url:"https://bigdog234.github.io/HTML-Games-V2/1v1space/"},
+  {name:"8 Ball Billiards",url:"https://bigdog234.github.io/HTML-Games-V2/8ball-billards-classic/"},
+  {name:"9007199254740992",url:"https://bigdog234.github.io/HTML-Games-V2/9007199254740992/"},
+  {name:"A Dark Room",url:"https://bigdog234.github.io/HTML-Games-V2/adarkroom/"},
+  {name:"Achievement Unlocked",url:"https://bigdog234.github.io/HTML-Games-V2/achievementunlocked/"},
+  {name:"Age of War",url:"https://bigdog234.github.io/HTML-Games-V2/age-of-war/"},
+  {name:"Alien Hominid",url:"https://bigdog234.github.io/HTML-Games-V2/alienhominid/"},
+  {name:"Angry Birds",url:"https://bigdog234.github.io/HTML-Games-V2/angry-birds/"},
+  {name:"Asteroids",url:"https://bigdog234.github.io/HTML-Games-V2/asteroids/"},
+  {name:"Avalanche",url:"https://bigdog234.github.io/HTML-Games-V2/avalanche/"},
+  {name:"Awesome Tanks 2",url:"https://bigdog234.github.io/HTML-Games-V2/awesome-tanks-2/"},
+  {name:"Bad Ice Cream",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream/"},
+  {name:"Bad Ice Cream 2",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-2/"},
+  {name:"Bad Ice Cream 3",url:"https://bigdog234.github.io/HTML-Games-V2/bad-ice-cream-3/"},
+  {name:"Baldi’s Basics",url:"https://bigdog234.github.io/HTML-Games-V2/baldis-basics/"},
+  {name:"Basketball Stars",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-stars/"},
+  {name:"Basketball Legends 2020",url:"https://bigdog234.github.io/HTML-Games-V2/basketball-legends-2020/"},
+  {name:"Big Red Button",url:"https://bigdog234.github.io/HTML-Games-V2/bigredbutton/"},
+  {name:"Binding of Isaac",url:"https://bigdog234.github.io/HTML-Games-V2/binding-of-isaac/"},
+  {name:"Bloxorz",url:"https://bigdog234.github.io/HTML-Games-V2/bloxors/"},
+  {name:"Boxel Rebound",url:"https://bigdog234.github.io/HTML-Games-V2/boxel-rebound/"},
+  {name:"Boxhead 2Play",url:"https://bigdog234.github.io/HTML-Games-V2/boxhead2play/"},
+  {name:"Breaking the Bank",url:"https://bigdog234.github.io/HTML-Games-V2/breakingthebank/"},
+  {name:"Breakout",url:"https://bigdog234.github.io/HTML-Games-V2/breakout/"},
+  {name:"BTD4",url:"https://bigdog234.github.io/HTML-Games-V2/btd4/"},
+  {name:"Cannon Basketball 4",url:"https://bigdog234.github.io/HTML-Games-V2/cannon-basketball-4/"},
+  {name:"Canyon Defense",url:"https://bigdog234.github.io/HTML-Games-V2/canyondefense/"},
+  {name:"Cell Machine",url:"https://bigdog234.github.io/HTML-Games-V2/cell-machine/"},
+  {name:"Chess",url:"https://bigdog234.github.io/HTML-Games-V2/chess/"},
+  {name:"Chrome Dino",url:"https://bigdog234.github.io/HTML-Games-V2/chrome-dino/"},
+  {name:"Cookie Clicker (fork)",url:"https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/"},
+  {name:"CookieClicker (alt)",url:"https://bigdog234.github.io/HTML-Games-V2/cookieclicker/"},
+  {name:"Core Ball",url:"https://bigdog234.github.io/HTML-Games-V2/core-ball/"},
+  {name:"CraftMine",url:"https://bigdog234.github.io/HTML-Games-V2/craftmine/"},
+  {name:"Creative Kill Chamber",url:"https://bigdog234.github.io/HTML-Games-V2/creativekillchamber/"},
+  {name:"Crossy Road",url:"https://bigdog234.github.io/HTML-Games-V2/crossyroad/"},
+  {name:"CSGO Clicker",url:"https://bigdog234.github.io/HTML-Games-V2/csgo-clicker/"}
+];
 
-  <script>
-    // -------------------------
-    // Editable games list
-    // Add icon later by adding `icon: "URL"` to each object
-    // -------------------------
-    const games = [
-      { name: "2048", url: "https://bigdog234.github.io/HTML-Games-V2/2048/" },
-      { name: "Cookie Clicker", url: "https://bigdog234.github.io/HTML-Games-V2/cookie-clicker/" },
-      { name: "Crossy Road", url: "https://bigdog234.github.io/HTML-Games-V2/crossyroad/" }
-    ];
+const grid=document.getElementById("gameGrid");
 
-    const grid = document.getElementById("gameGrid");
+games.forEach(game=>{
+  const div=document.createElement("div");
+  div.className="game";
+  div.textContent=game.name;
+  div.onclick=()=>openWindow(game);
+  grid.appendChild(div);
+});
 
-    games.forEach(game => {
-      const div = document.createElement("div");
-      div.className = "game";
-      div.textContent = game.name;
-      div.onclick = () => openWindow(game);
-      grid.appendChild(div);
-    });
-
-    function openWindow(game) {
-      const win = document.createElement("div");
-      win.className = "window";
-      win.innerHTML = `
-        <div class="titlebar">
-          <span>${game.name}</span>
-          <div>
-            <button onclick="this.closest('.window').style.display='none'">➖</button>
-            <button onclick="this.closest('.window').requestFullscreen()">⛶</button>
-            <button onclick="this.closest('.window').remove()">✕</button>
-          </div>
-        </div>
-        <iframe src="${game.url}"></iframe>
-      `;
-      document.body.appendChild(win);
-    }
-  </script>
+function openWindow(game){
+  const win=document.createElement("div");
+  win.className="window";
+  win.innerHTML=`
+    <div class="titlebar">
+      <span>${game.name}</span>
+      <div>
+        <button onclick="this.closest('.window').style.display='none'">➖</button>
+        <button onclick="this.closest('.window').requestFullscreen()">⛶</button>
+        <button onclick="this.closest('.window').remove()">✕</button>
+      </div>
+    </div>
+    <iframe src="${game.url}"></iframe>
+  `;
+  document.body.appendChild(win);
+}
+</script>
 </body>
 </html>
